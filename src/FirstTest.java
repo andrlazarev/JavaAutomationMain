@@ -171,8 +171,6 @@ public class FirstTest {
                 "Search Wikipedia",
                 "Cannot find text 'Search Wikipedia'"
         );
-
-        //Assert.assertTrue("Cannot find text 'Search Wikipedia'", actual);
     }
 
     private WebElement waitForElementPresent(By by, String errorMessage, long timeInSeconds)
