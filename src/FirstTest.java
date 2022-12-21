@@ -9,7 +9,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
 import java.net.URL;
 
 public class FirstTest {
@@ -151,6 +150,31 @@ public class FirstTest {
                 article_title
         );
     }
+
+    @Test
+    public void testSearchFieldText()
+    {
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
+                "Cannot find element SKIP",
+                5
+        );
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_container"),
+                "Cannot find element 'Search Wikipedia'",
+                5
+        );
+
+        assertElementHasText(
+                By.id("org.wikipedia:id/search_src_text"),
+                "Search Wikipedia",
+                "Cannot find text 'Search Wikipedia'"
+        );
+
+        //Assert.assertTrue("Cannot find text 'Search Wikipedia'", actual);
+    }
+
     private WebElement waitForElementPresent(By by, String errorMessage, long timeInSeconds)
     {
         WebDriverWait wait = new WebDriverWait(driver, timeInSeconds);
@@ -193,5 +217,13 @@ public class FirstTest {
         WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
         element.clear();
         return element;
+    }
+
+    private void assertElementHasText(By by, String expected_text, String error_message)
+    {
+        WebElement element = waitForElementPresent(by, error_message, 5);
+
+        String text = element.getAttribute("text");
+        Assert.assertEquals(error_message, text, expected_text);
     }
 }
