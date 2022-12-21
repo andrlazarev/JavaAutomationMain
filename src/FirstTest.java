@@ -95,11 +95,11 @@ public class FirstTest {
                 5
         );
 
-//        waitForElementAndClick(
-//                By.id("org.wikipedia:id/search_close_btn"),
-//                "Cannot find element 'Cancel search'",
-//                5
-//        );
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_close_btn"),
+                "Cannot find element 'Cancel search'",
+                5
+        );
 
         waitForElementNotPresent(
                 By.id("org.wikipedia:id/search_close_btn"),
@@ -170,6 +170,53 @@ public class FirstTest {
                 By.id("org.wikipedia:id/search_src_text"),
                 "Search Wikipedia",
                 "Cannot find text 'Search Wikipedia'"
+        );
+    }
+
+    @Test
+    public void testCancelSearchWithArticle()
+    {
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
+                "Cannot find element SKIP",
+                5
+        );
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_container"),
+                "Cannot find element 'Search Wikipedia'",
+                5
+        );
+
+        waitForElementAndSendKeys(
+                By.id("org.wikipedia:id/search_container"),
+                "java",
+                "Cannot find element search input",
+                15
+        );
+
+        waitForElementPresent(
+                By.xpath("//*[contains(@text,'Island in Indonesia')]"),
+                "Cannot find element with text 'Island in Indonesia'",
+                15
+        );
+
+        waitForElementPresent(
+                By.xpath("//*[contains(@text,'High-level programming language')]"),
+                "Cannot find element with text 'High-level programming language'",
+                15
+        );
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_close_btn"),
+                "Cannot find element 'Cancel search'",
+                5
+        );
+
+        waitForElementNotPresent(
+                By.id("org.wikipedia:id/search_close_btn"),
+                "Element find in page",
+                5
         );
     }
 
