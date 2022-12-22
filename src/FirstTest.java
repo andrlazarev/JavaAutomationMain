@@ -10,6 +10,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import java.net.URL;
+import java.util.List;
 
 public class FirstTest {
 
@@ -220,6 +221,48 @@ public class FirstTest {
         );
     }
 
+    @Test
+    public void testCheckSearchResult()
+    {
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
+                "Cannot find element SKIP",
+                5
+        );
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_container"),
+                "Cannot find element 'Search Wikipedia'",
+                5
+        );
+
+        waitForElementAndSendKeys(
+                By.id("org.wikipedia:id/search_container"),
+                "java",
+                "Cannot find element search input",
+                15
+        );
+
+        waitForElementPresent(
+                By.id("org.wikipedia:id/page_list_item_title"),
+                "Cannot find search result",
+                15
+        );
+
+        List<WebElement> listOfElements = driver.findElements(By.id("org.wikipedia:id/page_list_item_title"));
+        boolean result = false;
+        for ( int i=0; i < listOfElements.size(); i++) {
+            WebElement element = listOfElements.get(i);
+            if (checkSubstring(element, "Java")) {
+                result = true;
+            } else {
+                Assert.fail();
+            }
+        }
+
+        Assert.assertEquals("in search have result without 'Java'",true, result);
+    }
+
     private WebElement waitForElementPresent(By by, String errorMessage, long timeInSeconds)
     {
         WebDriverWait wait = new WebDriverWait(driver, timeInSeconds);
@@ -270,5 +313,11 @@ public class FirstTest {
 
         String text = element.getAttribute("text");
         Assert.assertEquals(error_message, text, expected_text);
+    }
+
+    private boolean checkSubstring(WebElement element, String substring)
+    {
+        String text = element.getAttribute("text");
+        return text.contains(substring);
     }
 }
