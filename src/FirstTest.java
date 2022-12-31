@@ -18,7 +18,7 @@ import java.util.List;
 public class FirstTest {
 
     private AppiumDriver driver;
-
+    public ScreenOrientation orientation = ScreenOrientation.PORTRAIT;;
     @Before
     public void setUp() throws Exception
     {
@@ -33,6 +33,10 @@ public class FirstTest {
         capabilities.setCapability("app","Users/andrejlazarev/Desktop/JavaAppiumAutomation/JavaAutomationMain/apks/org.wikipedia.apk");
 
         driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
+
+        if (orientation == ScreenOrientation.LANDSCAPE) {
+            orientation = ScreenOrientation.PORTRAIT;
+        }
     }
 
 
@@ -456,7 +460,8 @@ public class FirstTest {
                 15
         );
 
-        driver.rotate(ScreenOrientation.LANDSCAPE);
+        orientation = ScreenOrientation.LANDSCAPE;
+        driver.rotate(orientation);
 
         String title_after_rotation = waitForElementAndGetAttribute(
                 By.xpath("//*[@text='Java (programming language)']"),
@@ -471,7 +476,8 @@ public class FirstTest {
                 title_after_rotation
         );
 
-        driver.rotate(ScreenOrientation.PORTRAIT);
+        orientation = ScreenOrientation.PORTRAIT;
+        driver.rotate(orientation);
 
         String title_after_second_rotation = waitForElementAndGetAttribute(
                 By.xpath("//*[@text='Java (programming language)']"),
