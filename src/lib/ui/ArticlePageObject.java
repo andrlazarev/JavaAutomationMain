@@ -8,6 +8,7 @@ public class ArticlePageObject extends MainPageObject {
 
     private static final String
             TITLE_OF_ARTICLE_BY_SUBSTRING_TPL = "//*[contains(@text,'{SUBSTRING}')]",
+            FOLDER_NAME_BY_SUBSTRING_TPL = "//*[@text='{FOLDER}']",
             FOOTER_ELEMENT = "//*[@text='View article in browser']",
             OPTIONS_BUTTON = "//android.widget.ImageView[@content-desc='More options']",
             OPTIONS_ADD_TO_MY_LIST = "org.wikipedia:id/page_save",
@@ -15,6 +16,7 @@ public class ArticlePageObject extends MainPageObject {
             MY_LIST_NAME_INPUT = "org.wikipedia:id/text_input",
             MY_LIST_OK_BUTTON = "//*[@text='OK']",
             CLOSE_ARTICLE_BUTTON = "//android.widget.ImageButton[@content-desc='Navigate up']";
+
 
     public ArticlePageObject(AppiumDriver driver)
     {
@@ -25,6 +27,11 @@ public class ArticlePageObject extends MainPageObject {
     private static String getResultArticleElement(String substring)
     {
         return TITLE_OF_ARTICLE_BY_SUBSTRING_TPL.replace("{SUBSTRING}",substring);
+    }
+
+    private static String getResultFolderNameElement(String folder_name)
+    {
+        return FOLDER_NAME_BY_SUBSTRING_TPL.replace("{FOLDER}", folder_name);
     }
     /*TEMPLATES METHODS */
 
@@ -49,7 +56,7 @@ public class ArticlePageObject extends MainPageObject {
         );
     }
 
-    public void addArticleToMyList(String name_of_folder)
+    public void addArticleToNewList(String name_of_folder)
     {
         this.waitForElementAndClick(
                 By.id(OPTIONS_ADD_TO_MY_LIST),
@@ -73,6 +80,27 @@ public class ArticlePageObject extends MainPageObject {
         this.waitForElementAndClick(
                 By.xpath(MY_LIST_OK_BUTTON),
                 "Cannot press OK button",
+                5
+        );
+    }
+
+    public void addArticleToMyList(String name_of_folder)
+    {
+        this.waitForElementAndClick(
+                By.id(OPTIONS_ADD_TO_MY_LIST),
+                "Cannot find element 'Save'",
+                5
+        );
+
+        this.waitForElementAndClick(
+                By.id(OPTION_ONBOARDING_CHOISE_ADD_LIST),
+                "Cannot find element 'Add to list'",
+                5
+        );
+
+        this.waitForElementAndClick(
+                By.xpath(this.getResultFolderNameElement(name_of_folder)),
+                "Cannot find folder with name" + name_of_folder,
                 5
         );
     }

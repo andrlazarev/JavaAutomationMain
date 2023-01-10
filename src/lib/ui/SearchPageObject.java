@@ -2,6 +2,12 @@ package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class SearchPageObject extends MainPageObject{
 
@@ -10,7 +16,9 @@ public class SearchPageObject extends MainPageObject{
             SEARCH_CANCEL_BUTTON = "org.wikipedia:id/search_close_btn",
             SEARCH_RESULT_BY_SUBSTRING_TPL = "//*[@text='{SUBSTRING}']",
             SEARCH_RESULT_ELEMENT = "org.wikipedia:id/page_list_item_title",
-            SEARCH_EMPTY_RESULT_ELEMENT = "//*[@text='No results']";
+            SEARCH_EMPTY_RESULT_ELEMENT = "//*[@text='No results']",
+            DEFAULT_TEXT_IN_SEARCH_LINE = "Search Wikipedia",
+            BUTTON_RETURN_MAIN_PAGE = "//android.widget.ImageButton[@bounds='[0,66][154,220]']";
 
     public SearchPageObject(AppiumDriver driver)
     {
@@ -43,6 +51,7 @@ public class SearchPageObject extends MainPageObject{
     {
         this.waitForElementAndClick(By.id(SEARCH_CANCEL_BUTTON), "Cannot find and click search cancel button", 5);
     }
+
     public void typeSearchLine(String search_line)
     {
         this.waitForElementAndSendKeys(By.xpath(SEARCH_INIT_ELEMENT),search_line, "Cannot find and type into search input", 5);
@@ -85,5 +94,39 @@ public class SearchPageObject extends MainPageObject{
                 By.id(SEARCH_RESULT_ELEMENT),
                 "We supposed not to find any results"
         );
+    }
+
+    public void assertDefaultTextInSearchLine()
+    {
+        this.assertElementHasText(
+                By.xpath(SEARCH_INIT_ELEMENT),
+                DEFAULT_TEXT_IN_SEARCH_LINE,
+                "Cannot find text 'Search Wikipedia'"
+        );
+    }
+
+    public void waitSearchResults()
+    {
+        this.waitForElementPresent(
+                By.id(SEARCH_RESULT_ELEMENT),
+                "Cannot find search results",
+                15
+        );
+    }
+
+    public void assertSearchResultsBySubstring(String substring)
+    {
+        List<WebElement> listOfElements = driver.findElements(By.id(SEARCH_RESULT_ELEMENT));
+        boolean result = false;
+        for ( int i=0; i < listOfElements.size(); i++) {
+            WebElement element = listOfElements.get(i);
+            if (this.checkSubstring(element, substring)) {
+                result = true;
+            } else {
+                fail("Substring missing from search results" + substring);
+            }
+        }
+
+        assertEquals("Substring missing from search results" + substring,true, result);
     }
 }

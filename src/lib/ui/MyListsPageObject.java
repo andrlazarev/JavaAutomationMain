@@ -62,4 +62,6 @@ public class MyListsPageObject extends MainPageObject {
         );
         this.waitForArticleToDisappearByTitle(article_title);
     }
+
+
 }

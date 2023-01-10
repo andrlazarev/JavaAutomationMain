@@ -2,31 +2,18 @@ package tests;
 
 import lib.CoreTestCase;
 import lib.ui.ArticlePageObject;
-import lib.ui.MainPageObject;
+import lib.ui.OnboardingPageObject;
 import lib.ui.SearchPageObject;
 import org.junit.Test;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 public class ArticleTests extends CoreTestCase {
 
-    private MainPageObject MainPageObject;
-
-    protected void setUp() throws Exception
-    {
-        super.setUp();
-
-        MainPageObject = new MainPageObject(driver);
-    }
-
     @Test
     public void testCompareArticleTitle()
     {
-        MainPageObject.waitForElementAndClick(
-                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
-                "Cannot find element SKIP",
-                5
-        );
+        OnboardingPageObject onboardingPageObject = new OnboardingPageObject(driver);
+        onboardingPageObject.skipOnboardingButton();
 
         SearchPageObject SearchPageObject = new SearchPageObject(driver);
         SearchPageObject.initSearchInput();
@@ -48,11 +35,8 @@ public class ArticleTests extends CoreTestCase {
     @Test
     public void testSwipeArticle()
     {
-        MainPageObject.waitForElementAndClick(
-                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
-                "Cannot find element SKIP",
-                5
-        );
+        OnboardingPageObject onboardingPageObject = new OnboardingPageObject(driver);
+        onboardingPageObject.skipOnboardingButton();
 
         SearchPageObject SearchPageObject = new SearchPageObject(driver);
         SearchPageObject.initSearchInput();
@@ -61,5 +45,21 @@ public class ArticleTests extends CoreTestCase {
 
         ArticlePageObject articlePageObject = new ArticlePageObject(driver);
         articlePageObject.swipeToFooter();
+    }
+
+    @Test
+    public void testCheckTitleInThePage()
+    {
+        OnboardingPageObject onboardingPageObject = new OnboardingPageObject(driver);
+        onboardingPageObject.skipOnboardingButton();
+
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        searchPageObject.initSearchInput();
+        String search_line = "java";
+        searchPageObject.typeSearchLine(search_line);
+        searchPageObject.clickByArticleWithSubstring("Object-oriented programming language");
+
+        ArticlePageObject articlePageObject = new ArticlePageObject(driver);
+        articlePageObject.waitForTitleArticle("Object-oriented programming language");
     }
 }

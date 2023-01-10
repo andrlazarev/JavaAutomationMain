@@ -3,28 +3,15 @@ package tests;
 import lib.CoreTestCase;
 import lib.ui.*;
 import org.junit.Test;
-import org.openqa.selenium.By;
 
 public class MyListsTests extends CoreTestCase {
-
-    private MainPageObject MainPageObject;
-
-    protected void setUp() throws Exception
-    {
-        super.setUp();
-
-        MainPageObject = new MainPageObject(driver);
-    }
 
     @Test
     public void testSaveFirstArticleToMyList()
     {
 
-        MainPageObject.waitForElementAndClick(
-                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
-                "Cannot find element SKIP",
-                5
-        );
+        OnboardingPageObject onboardingPageObject = new OnboardingPageObject(driver);
+        onboardingPageObject.skipOnboardingButton();
 
         SearchPageObject SearchPageObject = new SearchPageObject(driver);
         SearchPageObject.initSearchInput();
@@ -38,7 +25,7 @@ public class MyListsTests extends CoreTestCase {
         String article_title = articlePageObject.waitForTitleArticleAndReturnElement("Java (programming language)").getAttribute("text");
         String name_of_folder = "Learning programming";
 
-        articlePageObject.addArticleToMyList(name_of_folder);
+        articlePageObject.addArticleToNewList(name_of_folder);
         articlePageObject.closeArticle();
 
         NavigationUI navigationUI = new NavigationUI(driver);
@@ -48,5 +35,39 @@ public class MyListsTests extends CoreTestCase {
         MyListsPageObject myListsPageObject = new MyListsPageObject(driver);
         myListsPageObject.openFolderByName(name_of_folder);
         myListsPageObject.swipeByArticleToDelete(article_title);
+    }
+
+    @Test
+    public void testCheckArticleAfterDeletedArticleInFoldier()
+    {
+        OnboardingPageObject onboardingPageObject = new OnboardingPageObject(driver);
+        onboardingPageObject.skipOnboardingButton();
+
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        searchPageObject.initSearchInput();
+        String search_line = "java";
+        searchPageObject.typeSearchLine(search_line);
+        searchPageObject.clickByArticleWithSubstring("Object-oriented programming language");
+
+        ArticlePageObject articlePageObject = new ArticlePageObject(driver);
+        articlePageObject.addArticleToNewList("My article");
+        articlePageObject.closeArticle();
+
+        searchPageObject.clickCancelSearch();
+        searchPageObject.typeSearchLine("Appium");
+        searchPageObject.clickByArticleWithSubstring("Automation for Apps");
+
+        articlePageObject.addArticleToMyList("My article");
+        articlePageObject.closeArticle();
+
+        NavigationUI navigationUI = new NavigationUI(driver);
+        navigationUI.returnFromSearch();
+        navigationUI.clickToSavedLists();
+
+        MyListsPageObject myListsPageObject = new MyListsPageObject(driver);
+        myListsPageObject.openFolderByName("My article");
+        myListsPageObject.swipeByArticleToDelete("Java (programming language)");
+        myListsPageObject.waitForArticleToDisappearByTitle("Java (programming language)");
+        myListsPageObject.waitForArticleToAppearByTitle("Appium");
     }
 }

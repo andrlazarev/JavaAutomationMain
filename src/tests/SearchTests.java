@@ -1,30 +1,17 @@
 package tests;
 
 import lib.CoreTestCase;
-import lib.ui.MainPageObject;
+import lib.ui.OnboardingPageObject;
 import lib.ui.SearchPageObject;
 import org.junit.Test;
-import org.openqa.selenium.By;
 
 public class SearchTests extends CoreTestCase {
-
-    private MainPageObject MainPageObject;
-
-    protected void setUp() throws Exception
-    {
-        super.setUp();
-
-        MainPageObject = new MainPageObject(driver);
-    }
 
     @Test
     public void testSearch()
     {
-        MainPageObject.waitForElementAndClick(
-                By.xpath("//*[contains(@text,'SKIP')]"),
-                "Cannot find element SKIP",
-                5
-        );
+        OnboardingPageObject onboardingPageObject = new OnboardingPageObject(driver);
+        onboardingPageObject.skipOnboardingButton();
 
         SearchPageObject SearchPageObject = new SearchPageObject(driver);
         SearchPageObject.initSearchInput();
@@ -35,11 +22,8 @@ public class SearchTests extends CoreTestCase {
     @Test
     public void testCancelSearch()
     {
-        MainPageObject.waitForElementAndClick(
-                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
-                "Cannot find element SKIP",
-                5
-        );
+        OnboardingPageObject onboardingPageObject = new OnboardingPageObject(driver);
+        onboardingPageObject.skipOnboardingButton();
 
         SearchPageObject SearchPageObject = new SearchPageObject(driver);
         SearchPageObject.initSearchInput();
@@ -52,11 +36,8 @@ public class SearchTests extends CoreTestCase {
     @Test
     public void testAmountOfNotEmptySearch()
     {
-        MainPageObject.waitForElementAndClick(
-                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
-                "Cannot find element SKIP",
-                5
-        );
+        OnboardingPageObject onboardingPageObject = new OnboardingPageObject(driver);
+        onboardingPageObject.skipOnboardingButton();
 
         SearchPageObject SearchPageObject = new SearchPageObject(driver);
 
@@ -75,11 +56,8 @@ public class SearchTests extends CoreTestCase {
     @Test
     public void testAmountOfEmptySearch()
     {
-        MainPageObject.waitForElementAndClick(
-                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
-                "Cannot find element SKIP",
-                5
-        );
+        OnboardingPageObject onboardingPageObject = new OnboardingPageObject(driver);
+        onboardingPageObject.skipOnboardingButton();
 
         SearchPageObject SearchPageObject = new SearchPageObject(driver);
 
@@ -90,4 +68,45 @@ public class SearchTests extends CoreTestCase {
         SearchPageObject.assertThereIsNotResultOfSearch();
     }
 
+    @Test
+    public void testSearchFieldText()
+    {
+        OnboardingPageObject onboardingPageObject = new OnboardingPageObject(driver);
+        onboardingPageObject.skipOnboardingButton();
+
+        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+        SearchPageObject.initSearchInput();
+        SearchPageObject.assertDefaultTextInSearchLine();
+    }
+
+    @Test
+    public void testCancelSearchWithArticle()
+    {
+
+        OnboardingPageObject onboardingPageObject = new OnboardingPageObject(driver);
+        onboardingPageObject.skipOnboardingButton();
+
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        searchPageObject.initSearchInput();
+        String search_line = "java";
+        searchPageObject.typeSearchLine(search_line);
+        searchPageObject.waitForSearchResult("Island in Indonesia");
+        searchPageObject.waitForSearchResult("High-level programming language");
+        searchPageObject.clickCancelSearch();
+        searchPageObject.waitForCancelButtonToDisappear();
+    }
+
+    @Test
+    public void testCheckSearchResult()
+    {
+        OnboardingPageObject onboardingPageObject = new OnboardingPageObject(driver);
+        onboardingPageObject.skipOnboardingButton();
+
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        searchPageObject.initSearchInput();
+        String search_line = "java";
+        searchPageObject.typeSearchLine(search_line);
+        searchPageObject.waitSearchResults();
+        searchPageObject.assertSearchResultsBySubstring("Java");
+    }
 }
