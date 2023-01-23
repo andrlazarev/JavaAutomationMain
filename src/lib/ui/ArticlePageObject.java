@@ -1,21 +1,20 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 public class ArticlePageObject extends MainPageObject {
 
     private static final String
-            TITLE_OF_ARTICLE_BY_SUBSTRING_TPL = "//*[contains(@text,'{SUBSTRING}')]",
-            FOLDER_NAME_BY_SUBSTRING_TPL = "//*[@text='{FOLDER}']",
-            FOOTER_ELEMENT = "//*[@text='View article in browser']",
-            OPTIONS_BUTTON = "//android.widget.ImageView[@content-desc='More options']",
-            OPTIONS_ADD_TO_MY_LIST = "org.wikipedia:id/page_save",
-            OPTION_ONBOARDING_CHOISE_ADD_LIST = "org.wikipedia:id/snackbar_action",
-            MY_LIST_NAME_INPUT = "org.wikipedia:id/text_input",
-            MY_LIST_OK_BUTTON = "//*[@text='OK']",
-            CLOSE_ARTICLE_BUTTON = "//android.widget.ImageButton[@content-desc='Navigate up']";
+            TITLE_OF_ARTICLE_BY_SUBSTRING_TPL = "xpath://*[contains(@text,'{SUBSTRING}')]",
+            FOLDER_NAME_BY_SUBSTRING_TPL = "xpath://*[@text='{FOLDER}']",
+            FOOTER_ELEMENT = "xpath://*[@text='View article in browser']",
+            OPTIONS_BUTTON = "xpath://android.widget.ImageView[@content-desc='More options']",
+            OPTIONS_ADD_TO_MY_LIST = "id:org.wikipedia:id/page_save",
+            OPTION_ONBOARDING_CHOISE_ADD_LIST = "id:org.wikipedia:id/snackbar_action",
+            MY_LIST_NAME_INPUT = "id:org.wikipedia:id/text_input",
+            MY_LIST_OK_BUTTON = "xpath://*[@text='OK']",
+            CLOSE_ARTICLE_BUTTON = "xpath://android.widget.ImageButton[@content-desc='Navigate up']";
 
 
     public ArticlePageObject(AppiumDriver driver)
@@ -38,19 +37,19 @@ public class ArticlePageObject extends MainPageObject {
     public void waitForTitleArticle(String substring)
     {
         String article_xpath = getResultArticleElement(substring);
-        this.waitForElementPresent(By.xpath(article_xpath), "Cannot find search result with substring" + substring);
+        this.waitForElementPresent(article_xpath, "Cannot find search result with substring" + substring);
     }
 
     public WebElement waitForTitleArticleAndReturnElement(String substring)
     {
         String article_xpath = getResultArticleElement(substring);
-        return this.waitForElementPresent(By.xpath(article_xpath), "Cannot find search result with substring" + substring);
+        return this.waitForElementPresent(article_xpath, "Cannot find search result with substring" + substring);
     }
 
     public void swipeToFooter()
     {
         this.swipeUpToFindElement(
-                By.xpath(FOOTER_ELEMENT),
+                FOOTER_ELEMENT,
                 "Cannot find the end of article",
                 20
         );
@@ -59,26 +58,26 @@ public class ArticlePageObject extends MainPageObject {
     public void addArticleToNewList(String name_of_folder)
     {
         this.waitForElementAndClick(
-                By.id(OPTIONS_ADD_TO_MY_LIST),
+                OPTIONS_ADD_TO_MY_LIST,
                 "Cannot find element 'Save'",
                 5
         );
 
         this.waitForElementAndClick(
-                By.id(OPTION_ONBOARDING_CHOISE_ADD_LIST),
+                OPTION_ONBOARDING_CHOISE_ADD_LIST,
                 "Cannot find element 'Add to list'",
                 5
         );
 
         this.waitForElementAndSendKeys(
-                By.id(MY_LIST_NAME_INPUT),
+                MY_LIST_NAME_INPUT,
                 name_of_folder,
                 "Cannot find text input",
                 5
         );
 
         this.waitForElementAndClick(
-                By.xpath(MY_LIST_OK_BUTTON),
+                MY_LIST_OK_BUTTON,
                 "Cannot press OK button",
                 5
         );
@@ -87,19 +86,19 @@ public class ArticlePageObject extends MainPageObject {
     public void addArticleToMyList(String name_of_folder)
     {
         this.waitForElementAndClick(
-                By.id(OPTIONS_ADD_TO_MY_LIST),
+                OPTIONS_ADD_TO_MY_LIST,
                 "Cannot find element 'Save'",
                 5
         );
 
         this.waitForElementAndClick(
-                By.id(OPTION_ONBOARDING_CHOISE_ADD_LIST),
+                OPTION_ONBOARDING_CHOISE_ADD_LIST,
                 "Cannot find element 'Add to list'",
                 5
         );
 
         this.waitForElementAndClick(
-                By.xpath(this.getResultFolderNameElement(name_of_folder)),
+                this.getResultFolderNameElement(name_of_folder),
                 "Cannot find folder with name" + name_of_folder,
                 5
         );
@@ -108,7 +107,7 @@ public class ArticlePageObject extends MainPageObject {
     public void closeArticle()
     {
         this.waitForElementAndClick(
-                By.xpath(CLOSE_ARTICLE_BUTTON),
+                CLOSE_ARTICLE_BUTTON,
                 "Cannot close article, cannot find X link",
                 5
         );
