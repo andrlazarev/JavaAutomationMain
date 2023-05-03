@@ -4,6 +4,8 @@ import lib.CoreTestCase;
 import lib.ui.ArticlePageObject;
 import lib.ui.OnboardingPageObject;
 import lib.ui.SearchPageObject;
+import lib.ui.factories.ArticlePageObjectFactory;
+import lib.ui.factories.SearchPageObjectFactory;
 import org.junit.Test;
 
 public class ChangeAppConditionTests extends CoreTestCase {
@@ -15,13 +17,13 @@ public class ChangeAppConditionTests extends CoreTestCase {
         OnboardingPageObject onboardingPageObject = new OnboardingPageObject(driver);
         onboardingPageObject.skipOnboardingButton();
 
-        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+        SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
 
         SearchPageObject.initSearchInput();
         SearchPageObject.typeSearchLine("Java");
         SearchPageObject.clickByArticleWithSubstring("Object-oriented programming language");
 
-        ArticlePageObject articlePageObject = new ArticlePageObject(driver);
+        ArticlePageObject articlePageObject = ArticlePageObjectFactory.get(driver);
 
         String title_before_rotation = articlePageObject.waitForTitleArticleAndReturnElement("Java (programming language").getAttribute("text");
 
@@ -52,7 +54,7 @@ public class ChangeAppConditionTests extends CoreTestCase {
         OnboardingPageObject onboardingPageObject = new OnboardingPageObject(driver);
         onboardingPageObject.skipOnboardingButton();
 
-        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+        SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
         SearchPageObject.initSearchInput();
         SearchPageObject.typeSearchLine("Java");
         SearchPageObject.waitForSearchResult("Object-oriented programming language");

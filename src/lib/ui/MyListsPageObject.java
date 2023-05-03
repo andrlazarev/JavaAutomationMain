@@ -1,12 +1,17 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
+import lib.Platform;
 
-public class MyListsPageObject extends MainPageObject {
+import static org.junit.Assert.assertEquals;
 
-    public static final String
-            FOLDER_BY_NAME_TPL = "xpath://*[@text='{FOLDER_NAME}']",
-            ARTICLE_BY_TITLE_TPL = "xpath://*[@text='{TITLE}']";
+abstract public class MyListsPageObject extends MainPageObject {
+
+    protected static String
+            FOLDER_BY_NAME_TPL,
+            ARTICLE_BY_TITLE_TPL,
+            BUTTON_FOR_DELETE_ARTICLE,
+            LIST_OF_ARTICLE_ELEMENTS;
 
     private static String getFolderXpathByName(String name_of_folder)
     {
@@ -15,7 +20,12 @@ public class MyListsPageObject extends MainPageObject {
 
     private static String getSavedArticleXpathByArticle(String article_title)
     {
-        return ARTICLE_BY_TITLE_TPL.replace("{TITLE}", article_title);
+        if (Platform.getInstance().isAndroid()) {
+            return ARTICLE_BY_TITLE_TPL.replace("{TITLE}", article_title);
+        } else {
+            return ARTICLE_BY_TITLE_TPL;
+        }
+
     }
 
     public MyListsPageObject(AppiumDriver driver) {
@@ -59,8 +69,24 @@ public class MyListsPageObject extends MainPageObject {
                 article_xpath,
                 "Cannot find saved article with name" + article_title
         );
+
+        if (Platform.getInstance().isIOS()) {
+            this.waitForElementAndClick(
+                    BUTTON_FOR_DELETE_ARTICLE,
+                    "Cannot find element for delete article",
+                    5
+            );
+        }
         this.waitForArticleToDisappearByTitle(article_title);
     }
 
+    public void checkFoundOneArticleAfterDeleted(){
+        int amountOfElements = this.sumOfElementsOnPageByLocator(
+                LIST_OF_ARTICLE_ELEMENTS,
+                "Cannot find locators" + LIST_OF_ARTICLE_ELEMENTS,
+                5
+                );
+        assertEquals("Element not deleted on save list" , 1, amountOfElements);
+    }
 
 }

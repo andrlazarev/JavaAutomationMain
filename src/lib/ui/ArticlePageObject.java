@@ -1,20 +1,21 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
+import lib.Platform;
 import org.openqa.selenium.WebElement;
 
-public class ArticlePageObject extends MainPageObject {
+abstract public class ArticlePageObject extends MainPageObject {
 
-    private static final String
-            TITLE_OF_ARTICLE_BY_SUBSTRING_TPL = "xpath://*[contains(@text,'{SUBSTRING}')]",
-            FOLDER_NAME_BY_SUBSTRING_TPL = "xpath://*[@text='{FOLDER}']",
-            FOOTER_ELEMENT = "xpath://*[@text='View article in browser']",
-            OPTIONS_BUTTON = "xpath://android.widget.ImageView[@content-desc='More options']",
-            OPTIONS_ADD_TO_MY_LIST = "id:org.wikipedia:id/page_save",
-            OPTION_ONBOARDING_CHOISE_ADD_LIST = "id:org.wikipedia:id/snackbar_action",
-            MY_LIST_NAME_INPUT = "id:org.wikipedia:id/text_input",
-            MY_LIST_OK_BUTTON = "xpath://*[@text='OK']",
-            CLOSE_ARTICLE_BUTTON = "xpath://android.widget.ImageButton[@content-desc='Navigate up']";
+    protected static String
+            TITLE_OF_ARTICLE_BY_SUBSTRING_TPL,
+            FOLDER_NAME_BY_SUBSTRING_TPL,
+            FOOTER_ELEMENT,
+            OPTIONS_BUTTON,
+            OPTIONS_ADD_TO_MY_LIST,
+            OPTION_ONBOARDING_CHOISE_ADD_LIST,
+            MY_LIST_NAME_INPUT,
+            MY_LIST_OK_BUTTON,
+            CLOSE_ARTICLE_BUTTON;
 
 
     public ArticlePageObject(AppiumDriver driver)
@@ -25,7 +26,11 @@ public class ArticlePageObject extends MainPageObject {
     /*TEMPLATES METHODS */
     private static String getResultArticleElement(String substring)
     {
-        return TITLE_OF_ARTICLE_BY_SUBSTRING_TPL.replace("{SUBSTRING}",substring);
+        if (Platform.getInstance().isAndroid()) {
+            return TITLE_OF_ARTICLE_BY_SUBSTRING_TPL.replace("{SUBSTRING}",substring);
+        } else {
+            return TITLE_OF_ARTICLE_BY_SUBSTRING_TPL;
+        }
     }
 
     private static String getResultFolderNameElement(String folder_name)
@@ -36,8 +41,12 @@ public class ArticlePageObject extends MainPageObject {
 
     public void waitForTitleArticle(String substring)
     {
-        String article_xpath = getResultArticleElement(substring);
-        this.waitForElementPresent(article_xpath, "Cannot find search result with substring" + substring);
+        if (Platform.getInstance().isAndroid()) {
+            String article_xpath = getResultArticleElement(substring);
+            this.waitForElementPresent(article_xpath, "Cannot find search result with substring" + substring);
+        } else {
+            this.waitForElementPresent(TITLE_OF_ARTICLE_BY_SUBSTRING_TPL, "Cannot find search result with substring");
+        }
     }
 
     public WebElement waitForTitleArticleAndReturnElement(String substring)
@@ -104,6 +113,14 @@ public class ArticlePageObject extends MainPageObject {
         );
     }
 
+    public void addArticlesToMySaves()
+    {
+        this.waitForElementAndClick(
+                OPTIONS_ADD_TO_MY_LIST,
+                "Cannot find option to add article to reading list",
+                5
+                );
+    }
     public void closeArticle()
     {
         this.waitForElementAndClick(
@@ -112,4 +129,5 @@ public class ArticlePageObject extends MainPageObject {
                 5
         );
     }
+
 }

@@ -9,16 +9,16 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-public class SearchPageObject extends MainPageObject{
+abstract public class SearchPageObject extends MainPageObject{
 
-    private static final String
-            SEARCH_INIT_ELEMENT = "xpath://*[contains(@text,'Search Wikipedia')]",
-            SEARCH_CANCEL_BUTTON = "id:org.wikipedia:id/search_close_btn",
-            SEARCH_RESULT_BY_SUBSTRING_TPL = "xpath://*[@text='{SUBSTRING}']",
-            SEARCH_RESULT_ELEMENT = "id:org.wikipedia:id/page_list_item_title",
-            SEARCH_EMPTY_RESULT_ELEMENT = "xpath://*[@text='No results']",
-            DEFAULT_TEXT_IN_SEARCH_LINE = "Search Wikipedia",
-            BUTTON_RETURN_MAIN_PAGE = "xpath://android.widget.ImageButton[@bounds='[0,66][154,220]']";
+    protected static String
+            SEARCH_INIT_ELEMENT,
+            SEARCH_CANCEL_BUTTON,
+            SEARCH_RESULT_BY_SUBSTRING_TPL,
+            SEARCH_RESULT_ELEMENT,
+            SEARCH_EMPTY_RESULT_ELEMENT,
+            DEFAULT_TEXT_IN_SEARCH_LINE,
+            BUTTON_RETURN_MAIN_PAGE;
 
     public SearchPageObject(AppiumDriver driver)
     {

@@ -22,8 +22,8 @@ public class iOSTestCase extends TestCase {
         DesiredCapabilities capabilities = new DesiredCapabilities();
 
         capabilities.setCapability("platformName","iOS");
-        capabilities.setCapability("deviceName","ForTest");
-        capabilities.setCapability("platformVersion","14.0");
+        capabilities.setCapability("deviceName","iPhone 14");
+        capabilities.setCapability("platformVersion","16.4");
         capabilities.setCapability("app","Users/andrejlazarev/Desktop/JavaAppiumAutomation/JavaAutomationMain/apks/Wikipedia.app");
 
         driver = new IOSDriver(new URL(AppiumURL), capabilities);
