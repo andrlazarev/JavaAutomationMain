@@ -87,8 +87,14 @@ public class MainPageObject {
 
     public boolean checkSubstring(WebElement element, String substring)
     {
-        String text = element.getAttribute("text");
+        String text;
+        if (Platform.getInstance().isAndroid()){
+            text = element.getAttribute("text");
+        } else {
+            text = element.getAttribute("name");
+        }
         return text.contains(substring);
+
     }
 
     public void swipeUp(int timeOfSwipe)
@@ -219,4 +225,10 @@ public class MainPageObject {
         }
     }
 
+    public List<WebElement> getListOfElementsOnPage(String locator)
+    {
+        By by = getLocatorByString(locator);
+        List<WebElement> listOfElements = driver.findElements(by);
+        return listOfElements;
+    }
 }

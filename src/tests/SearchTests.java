@@ -1,6 +1,7 @@
 package tests;
 
 import lib.CoreTestCase;
+import lib.Platform;
 import lib.ui.OnboardingPageObject;
 import lib.ui.SearchPageObject;
 import lib.ui.factories.SearchPageObjectFactory;
@@ -97,8 +98,10 @@ public class SearchTests extends CoreTestCase {
     @Test
     public void testCheckSearchResult()
     {
-        OnboardingPageObject onboardingPageObject = new OnboardingPageObject(driver);
-        onboardingPageObject.skipOnboardingButton();
+        if (Platform.getInstance().isAndroid()) {
+            OnboardingPageObject onboardingPageObject = new OnboardingPageObject(driver);
+            onboardingPageObject.skipOnboardingButton();
+        }
 
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
         searchPageObject.initSearchInput();

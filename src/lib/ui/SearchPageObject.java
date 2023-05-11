@@ -1,9 +1,11 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
+import lib.Platform;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import java.awt.*;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -116,7 +118,9 @@ abstract public class SearchPageObject extends MainPageObject{
 
     public void assertSearchResultsBySubstring(String substring)
     {
-        List<WebElement> listOfElements = driver.findElements(By.id(SEARCH_RESULT_ELEMENT));
+
+        //List<WebElement> listOfElements = driver.findElements(By.id(SEARCH_RESULT_ELEMENT));
+        List<WebElement> listOfElements = this.getListOfElementsOnPage(SEARCH_RESULT_ELEMENT);
         boolean result = false;
         for ( int i=0; i < listOfElements.size(); i++) {
             WebElement element = listOfElements.get(i);
@@ -125,6 +129,10 @@ abstract public class SearchPageObject extends MainPageObject{
             } else {
                 fail("Substring missing from search results" + substring);
             }
+        }
+
+        if (listOfElements.size() < 5) {
+            fail("too few results");
         }
 
         assertEquals("Substring missing from search results" + substring,true, result);
